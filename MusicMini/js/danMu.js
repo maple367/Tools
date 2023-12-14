@@ -97,6 +97,3 @@ function timeLine(timeLine) {
     var date = new Date(timeLine);
     return (date.getTime() / 1000)
 }
-
-//初始化歌单
-getSongList(SongListID);

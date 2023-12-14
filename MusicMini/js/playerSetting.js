@@ -75,7 +75,7 @@ function Play(mode = 'auto') {
     switch (mode) {
         case 'auto'://自动切换
             if (oAudio.paused) {
-                try { oAudio.play(); } catch (err) { alert("点击启动播放");}
+                oAudio.play();
                 $("#PlayButtonIcon").empty();
                 $("#PlayButtonIcon").append("&#xe651;");
                 $(".imgBackground").css("animation-play-state", "running");
