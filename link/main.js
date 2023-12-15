@@ -20,6 +20,7 @@ let res
 	document.getElementById("searchbtn").innerHTML=' Shorten it';
     if(res.key!=="")
     document.getElementById("result").innerHTML=window.location.origin+window.location.pathname+res.key;
+    console.log(res);
     $('#exampleModal').modal('show')
   }).catch(function(err){alert("Unknow error. Please retry!");
   console.log(err);
