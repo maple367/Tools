@@ -147,8 +147,12 @@
       <div class="dialog-body">
         <p>
           在浏览器收藏夹管理器中选择“导出收藏夹”，然后选择导出的 HTML
-          文件。文件夹保留为分组，相同网址去重，现有收藏不会被覆盖。
+          文件。保留文件夹层级，相同网址自动去重。
         </p>
+        <label>导入方式<select id="import-mode">
+          <option value="merge">合并到现有收藏</option>
+          <option value="replace">替换现有收藏</option>
+        </select></label>
         <label class="check"
           ><input
             id="import-bar-only"
@@ -157,6 +161,7 @@
           />仅导入收藏夹栏（含子文件夹）</label
         >
         <input id="import-file" type="file" accept=".html,.htm,text/html" />
+        <p id="import-status" role="status" aria-live="polite" hidden></p>
         <p>也可导出 JSON 备份，在其他设备上恢复完整设置。</p>
       </div>
     </dialog>
@@ -167,7 +172,7 @@
       accept=".json,application/json"
     />
     <div id="toast" role="status" hidden></div>
-    <script src="bookmarks.js?v=0f9a7ac6"></script>
-    <script src="app.js?v=0f9a7ac6"></script>
+    <script src="bookmarks.js?v=c4d057ba3d62"></script>
+    <script src="app.js?v=0e73673f6add"></script>
   </body>
 </html>

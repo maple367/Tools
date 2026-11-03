@@ -610,13 +610,7 @@
       return;
     }
     try {
-      if (
-        /^https?:\/\//i.test(q) ||
-        /^[\w.-]+\.[a-z]{2,}([/:?#]\S*)?$/i.test(q) ||
-        /^localhost(:\d+)?(\/\S*)?$/.test(q)
-      )
-        navigate(urlOf(q));
-      else navigate(engines[$("engine").value] + encodeURIComponent(q));
+      navigate(engines[$("engine").value] + encodeURIComponent(q));
     } catch (err) {
       toast(err.message);
     }
@@ -851,35 +845,70 @@
     }
     return result;
   }
-  $("import-open").onclick = () => $("import-dialog").showModal();
+  let importRevision = 0;
+  function importStatus(message) {
+    $("import-status").textContent = message;
+    $("import-status").hidden = !message;
+  }
+  function setImportBusy(busy) {
+    for (const id of ["import-file", "import-mode", "import-bar-only"])
+      $(id).disabled = busy;
+  }
+  $("import-open").onclick = () => {
+    importRevision++;
+    $("import-mode").value = "merge";
+    $("import-file").value = "";
+    importStatus("");
+    setImportBusy(false);
+    $("import-dialog").showModal();
+  };
+  $("import-dialog").addEventListener("close", () => {
+    importRevision++;
+    setImportBusy(false);
+  });
   $("import-file").onchange = async (e) => {
     const f = e.target.files[0];
     if (!f) return;
+    const revision = ++importRevision;
+    const replacing = $("import-mode").value === "replace";
+    const barOnly = $("import-bar-only").checked;
+    setImportBusy(true);
+    importStatus("正在读取收藏…");
     try {
       if (f.size > 10 * 1024 * 1024)
         throw Error("文件过大，请选择 10 MB 以内的书签文件");
-      const incoming = parseHTML(await f.text(), $("import-bar-only").checked);
-      const known = new Set(state.links.map((x) => x.url));
+      const html = await f.text();
+      if (revision !== importRevision) return;
+      const incoming = parseHTML(html, barOnly);
+      if (!incoming.length) throw Error("未找到有效 HTTP / HTTPS 书签，原收藏未改变");
+      const known = new Set(replacing ? [] : state.links.map((x) => x.url));
       const added = incoming.filter((x) => {
         if (known.has(x.url)) return false;
         known.add(x.url);
         return true;
       });
-      if (state.links.length + added.length > 20000)
-        throw Error("最多支持 20000 条收藏");
-      if (!incoming.length) throw Error("未找到有效 HTTP / HTTPS 书签");
-      if (commit({ ...state, links: [...state.links, ...added] })) {
+      const links = replacing ? added : [...state.links, ...added];
+      if (links.length > 20000) throw Error("最多支持 20000 条收藏");
+      if (replacing && !confirm(`用导入的 ${added.length} 条收藏替换当前 ${state.links.length} 条收藏？设置保持不变。`)) {
+        importStatus("已取消替换，原收藏未改变");
+        return;
+      }
+      if (commit({ ...state, links })) {
         active = "全部";
+        allView = false;
         render();
         $("import-dialog").close();
-        toast(
-          `已导入 ${added.length} 条，跳过重复 ${incoming.length - added.length} 条`,
-        );
+        toast(`已${replacing ? "替换为" : "合并"} ${added.length} 条，跳过重复 ${incoming.length - added.length} 条`);
+      } else {
+        importStatus("无法保存：浏览器存储不可用或空间不足，原收藏未改变");
       }
     } catch (err) {
-      toast(err.message);
+      if (revision === importRevision) importStatus(err.message);
     } finally {
-      e.target.value = "";
+      if (revision === importRevision) {
+        e.target.value = "";
+        setImportBusy(false);
+      }
     }
   };
   $("export").onclick = () => {

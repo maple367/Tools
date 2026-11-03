@@ -31,10 +31,6 @@ const bookmarks = [
   },
   {
     title: "Tools",
-    links: [
-      { name: "MusicMini", url: "/MusicMini" },
-      { name: "Z-Library", url: "https://zh.singlelogin.re/" },
-      { name: "ShortenLink", url: "/link" },
-    ],
+    links: [{ name: "Z-Library", url: "https://zh.singlelogin.re/" }],
   },
 ];
