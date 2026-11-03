@@ -1,0 +1,14 @@
+{
+  "main_module": "worker.js",
+  "compatibility_date": "2026-06-01",
+  "bindings": [
+    {
+      "type": "ratelimit",
+      "name": "RATE_LIMITER",
+      "namespace_id": "36720261103",
+      "simple": { "limit": 30, "period": 60 }
+    }
+  ],
+  "observability": { "enabled": false, "redact_query_string": true },
+  "logpush": false
+}

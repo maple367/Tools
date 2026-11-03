@@ -1,34 +1,31 @@
-# [Homepage](https://danggoodcode.com/startpage)
+# Maple 起始页
 
-![homepage](https://i.redd.it/cbnzq36zj3601.gif)
+个人使用的简约静态主页：时钟、搜索、多级收藏夹、系统深浅色主题、壁纸和可选诗词一言。不包含 AI、天气或定位功能。
 
-## Customization
+**主页：https://home.maple367.eu.org/**
 
-### Customize Bookmarks
+## 使用
 
-Bookmarks are now held in the `bookmarks.js` file for easy updating. `bookmarks` is an array of objects with a `title` and `links` property. The `title` defines what the header of the "bookmark section" box will be. `link` is an array of link objects each with a name and a url to link to.
+- 按 `/` 聚焦搜索，支持 Bing、Google、百度、DuckDuckGo 和收藏夹搜索。
+- 从浏览器导出收藏夹 HTML，再在主页导入；默认只导入收藏夹栏及子文件夹。
+- 收藏和设置保存在当前浏览器，通过 JSON 备份手动迁移，不自动同步。
+- 本地壁纸在浏览器内压缩保存，不上传服务器；也支持 HTTPS 图片直链。
+- Maple Mono NF CN 网页字体随站点提供，优先使用已安装字体，未安装时按字符范围加载 WOFF2 分包。
 
-> The way the site is currently styled bookmarks should always have a length of `4` if you want to have more sections you need to change the `width` property of the css class `bookmark-set`
+完整说明见 [HOME.md](HOME.md)。
 
-### Customize Search Engine
+## 本地预览与部署
 
-You can change the search engine used by the search overlay by updating the url value stored in the `searchUrl` var in `index.html` to the correct string for your engine.
+```sh
+python -m http.server 8765 --bind 127.0.0.1
+```
 
-Examples:
+访问 http://127.0.0.1:8765/ 。主页没有构建步骤，使用 GitHub Pages 从 `main` 分支根目录发布；保留现有 `CNAME`、`MusicMini/` 和 `link/`。
 
-- DuckDuckGo: `https://duckduckgo.com/?q=`
-- Bing: `https://www.bing.com/search?q=`
+网页图标由浏览器直接加载；根路径图标失效时，独立 [Cloudflare Worker](worker/README.md) 仅发现实际图标 URL，不存储图片或收藏。字体授权与生成方法见 [字体说明](assets/fonts/README.md)。
 
-### Customize Styling
+开发依赖、个人收藏导出、壁纸和本地测试资料不提交到公开仓库。请勿将私密 API 凭据写入前端。
 
-Styles are handled through CSS variables. To update the colors you just need to change the variable definitions defined in `:root`.
+## 来源与许可
 
-| Variable           | default                    | description                                                                                                                |
-| ------------------ | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `--bg`             | `#5f4b8b`                  | Defines the body background color                                                                                          |
-| `--fg`             | `#ffffff`                  | Defines the primary foreground (text) color for clock, weather, and titles                                                 |
-| `--secondaryFg`    | `#b3b3b3`                  | Defines the foreground (text) color for links                                                                              |
-| `--containerBg`    | `#272727`                  | Defines the background color of the boxes                                                                                  |
-| `--searchBg`       | `--containerBg`            | Defines the background color of the search overlay                                                                         |
-| `--scrollbarColor` | `#3f3f3f`                  | Defines the color of the custom scrollbars                                                                                 |
-| `--fontFamily`     | `"Roboto Mono", monospace` | Defines the font used. To change to a custom font you will also have to import that font from whatever source is available |
+在原有 [startpage](https://danggoodcode.com/startpage) 基础上重做。原项目许可见 [LICENSE](LICENSE)，字体单独遵循 [SIL OFL 1.1](assets/fonts/OFL.txt)。

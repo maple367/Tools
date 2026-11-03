@@ -1,0 +1,1 @@
+{"name":"maple-favicon-resolver","private":true,"type":"module","scripts":{"test":"node test.mjs","test:live":"node live.mjs","dev":"wrangler dev"},"devDependencies":{"miniflare":"^4.0.0","wrangler":"^4.0.0"}}

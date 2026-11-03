@@ -1,169 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
-    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Maple · 起始页</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
     <link rel="stylesheet" href="styles.css" />
-    <link href="https://imgs.maple367.eu.org/20231026/maple.7j0pshygz7g0.ico" rel="shortcut icon" type="image/x-icon" />
   </head>
   <body>
-    <div id="search">
-      <input
-        id="search-field"
-        type="text"
-        name="search-field"
-        onkeypress="return search(event)"
-      />
-    </div>
-    <div class="container">
-      <div id="clock"></div>
-      <div class="weather-container">
-        <div class="row">
-          <div id="location" class="inline"></div>
-          <div class="inline"></div>
-          <div id="weather-description" class="inline"></div>
-          <div id="temp" class="inline"></div>
+    <div class="ambient" aria-hidden="true"></div>
+    <header>
+      <a class="brand" href="./">Maple<span> / 起始页</span></a
+      ><button id="settings-open" class="subtle">设置 ↗</button>
+    </header>
+    <main>
+      <section class="hero">
+        <time id="clock" aria-label="当前时间">--:--</time>
+        <div id="date"></div>
+        <form id="search-form" class="search">
+          <label class="sr-only" for="engine">搜索引擎</label
+          ><select id="engine">
+            <option value="bing">Bing</option>
+            <option value="google">Google</option>
+            <option value="baidu">百度</option>
+            <option value="duck">DuckDuckGo</option>
+            <option value="bookmarks">收藏夹</option></select
+          ><label class="sr-only" for="query">搜索内容</label
+          ><input
+            id="query"
+            placeholder="搜索，或输入网址"
+            autocomplete="off"
+            type="search"
+          /><button aria-label="搜索" type="submit">↗</button>
+        </form>
+        <div class="search-hint">按 <kbd>/</kbd> 开始搜索</div>
+      </section>
+      <section class="collection">
+        <div class="collection-head">
+          <div>
+            <h1>收藏夹<span id="count"></span></h1>
+          </div>
+          <div class="actions">
+            <button id="import-open" class="subtle">↓ 导入书签</button
+            ><button id="add-open" class="primary">＋ 添加</button>
+          </div>
         </div>
+        <nav id="groups" aria-label="文件夹路径"></nav>
+        <div id="folders" class="folder-grid" aria-label="子文件夹"></div>
+        <div id="links" class="links"></div>
+        <div id="empty" hidden>
+          这里还没有收藏。导入浏览器书签，或添加一个喜欢的网站。
+        </div>
+      </section>
+    </main>
+    <footer>
+      <button
+        id="hitokoto"
+        class="subtle"
+        title="换一句"
+        aria-label="一言，点击换一句"
+        hidden
+      ></button>
+      <button id="export" class="subtle">导出备份 ↗</button>
+    </footer>
+    <dialog id="settings">
+      <form method="dialog" class="dialog-head">
+        <h2>设置</h2>
+        <button aria-label="关闭设置">×</button>
+      </form>
+      <div class="dialog-body">
+        <label
+          >主题<select id="theme">
+            <option value="system">跟随系统</option>
+            <option value="night">深夜 · 深色</option>
+            <option value="light">纸白 · 浅色</option>
+            <option value="graphite">石墨 · 深色</option>
+            <option value="ocean">海盐蓝 · 深色</option>
+            <option value="sand">暖砂 · 浅色</option>
+            <option value="mist">雾紫 · 浅色</option>
+          </select></label
+        ><label class="check"
+          ><input id="seconds" type="checkbox" />显示秒数</label
+        ><label class="check"
+          ><input id="hour12" type="checkbox" />12 小时制</label
+        ><label class="check"
+          ><input id="newtab" type="checkbox" />在新标签页打开链接</label
+        ><label class="check"
+          ><input id="quote" type="checkbox" />显示一言（联网获取诗词）</label
+        ><label
+          >壁纸网址（仅 HTTPS，可留空）<input
+            id="wallpaper"
+            type="url"
+            placeholder="https://…" /></label
+        ><label
+          >或选择本地壁纸（自动压缩）<input
+            id="wallpaper-file"
+            type="file"
+            accept="image/jpeg,image/png,image/webp" /></label
+        >
+        <p id="wallpaper-status" role="status" aria-live="polite" hidden></p>
+        <button id="wallpaper-clear" class="subtle">清除壁纸</button
+        ><button id="settings-save" class="primary">保存设置</button>
+        <hr />
+        <h3>数据与隐私</h3>
+        <p>
+          收藏和设置保存在当前浏览器，不上传到
+          GitHub。清除站点数据前请导出备份。不同设备不会自动同步。
+        </p>
+        <button id="restore-open" class="subtle">从 JSON 备份恢复</button>
       </div>
-      <div id="bookmark-container"></div>
-    </div>
-
+    </dialog>
+    <dialog id="editor">
+      <form id="edit-form">
+        <div class="dialog-head">
+          <h2 id="editor-title">添加收藏</h2>
+          <button type="button" id="editor-close" aria-label="关闭">×</button>
+        </div>
+        <div class="dialog-body">
+          <label>名称<input id="link-name" required maxlength="200" /></label
+          ><label
+            >网址<input
+              id="link-url"
+              required
+              placeholder="https://example.com" /></label
+          ><label
+            >分组<input
+              id="link-group"
+              list="group-list"
+              required
+              maxlength="100"
+              value="常用" /><datalist id="group-list"></datalist></label
+          ><button class="primary" type="submit">保存收藏</button
+          ><button id="delete-link" class="danger" type="button" hidden>
+            删除收藏
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="import-dialog">
+      <form method="dialog" class="dialog-head">
+        <h2>导入浏览器收藏夹</h2>
+        <button aria-label="关闭">×</button>
+      </form>
+      <div class="dialog-body">
+        <p>
+          在浏览器收藏夹管理器中选择“导出收藏夹”，然后选择导出的 HTML
+          文件。文件夹保留为分组，相同网址去重，现有收藏不会被覆盖。
+        </p>
+        <label class="check"
+          ><input
+            id="import-bar-only"
+            type="checkbox"
+            checked
+          />仅导入收藏夹栏（含子文件夹）</label
+        >
+        <input id="import-file" type="file" accept=".html,.htm,text/html" />
+        <p>也可导出 JSON 备份，在其他设备上恢复完整设置。</p>
+      </div>
+    </dialog>
+    <input
+      id="restore-file"
+      hidden
+      type="file"
+      accept=".json,application/json"
+    />
+    <div id="toast" role="status" hidden></div>
     <script src="bookmarks.js"></script>
-    <script>
-      const searchUrl = "https://www.bing.com/search?q=";
-      // Search on enter key event
-      function search(e) {
-        if (e.keyCode == 13) {
-          var val = document.getElementById("search-field").value;
-          window.open(searchUrl + val);
-        }
-      }
-      // Get current time and format
-      function getTime() {
-        let date = new Date(),
-          min = date.getMinutes(),
-          sec = date.getSeconds(),
-          hour = date.getHours();
-
-        return (
-          "" +
-          (hour < 10 ? "0" + hour : hour) +
-          ":" +
-          (min < 10 ? "0" + min : min) +
-          ":" +
-          (sec < 10 ? "0" + sec : sec)
-        );
-      }
-      // Handle Weather request
-      function getWeather() {
-        var options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        };
-        function success(pos) {
-          var crd = pos.coords.longitude.toFixed(2)+","+pos.coords.latitude.toFixed(2);
-          var key = "03c29e07717547f5a6d684f19ecad4db";
-          let xhr = new XMLHttpRequest();
-          // Request to open weather map
-          xhr.open(
-            "GET",
-            "https://devapi.qweather.com/v7/grid-weather/now?location="+crd+"&key="+key
-          );
-          xhr.onload = () => {
-            if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                let json = JSON.parse(xhr.responseText);
-                document.getElementById("temp").innerHTML =
-                  json.now.temp + " ℃";
-                document.getElementById("weather-description").innerHTML =
-                  json.now.text;
-              } else {
-                console.log("error msg: " + xhr.status);
-              }
-            }
-          };
-          xhr.send();
-          let xhr2 = new XMLHttpRequest();
-          xhr2.open(
-            "GET",
-            "https://geoapi.qweather.com/v2/city/lookup?location="+crd+"&key="+key
-          );
-          xhr2.onload = () => {
-            if (xhr2.readyState === 4) {
-              if (xhr2.status === 200) {
-                let json = JSON.parse(xhr2.responseText);
-                document.getElementById("location").innerHTML =
-                json.location[0].adm2+" "+json.location[0].name;
-              } else {
-                console.log("error msg: " + xhr2.status);
-              }
-            }
-          };
-          xhr2.send();
-        }
-        function error(err) {
-          console.warn("ERROR(" + err.code + "): " + err.message);
-        }
-        async function getLocation() {
-          try {
-            const position = await new Promise((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject, options);
-            });
-            success(position);
-          } catch (error) {
-            console.error("Error getting location:", error);
-            error(error);
-          }
-        }
-        getLocation();
-      }
-      // Handle writing out Bookmarks
-      function setupBookmarks() {
-        const bookmarkContainer = document.getElementById("bookmark-container");
-        bookmarkContainer.innerHTML = bookmarks
-          .map((b) => {
-            const html = ["<div class='bookmark-set'>"];
-            html.push(`<div class="bookmark-title">${b.title}</div>`);
-            html.push('<div class="bookmark-inner-container">');
-            html.push(
-              ...b.links.map(
-                (l) =>
-                  `<a class="bookmark" href="${l.url}" target="_blank">${l.name}</a>`
-              )
-            );
-            html.push("</div></div>");
-            return html.join("");
-          })
-          .join("");
-      }
-
-      window.onload = () => {
-        setupBookmarks();
-        getWeather();
-        // Set up the clock
-        document.getElementById("clock").innerHTML = getTime();
-        // Set clock interval to tick clock
-        setInterval(() => {
-          document.getElementById("clock").innerHTML = getTime();
-        }, 100);
-      };
-
-      document.addEventListener("keyup", (event) => {
-        if (event.keyCode == 32) {
-          // Spacebar code to open search
-          document.getElementById("search").style.display = "flex";
-          document.getElementById("search-field").focus();
-        } else if (event.keyCode == 27) {
-          // Esc to close search
-          document.getElementById("search-field").value = "";
-          document.getElementById("search-field").blur();
-          document.getElementById("search").style.display = "none";
-        }
-      });
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
