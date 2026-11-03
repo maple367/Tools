@@ -1,6 +1,6 @@
 # Maple 起始页
 
-主页采用独立静态 HTML/CSS/JavaScript，无构建步骤、无 AI、无天气或定位。图标自动发现使用已部署的独立 Cloudflare Worker，无数据库或图片存储；主页本身仍可由 GitHub Pages 托管。保留原仓库的 CNAME、MusicMini 和 link 子目录。
+主页采用独立静态 HTML/CSS/JavaScript，无构建步骤、无 AI、无天气或定位。图标自动发现使用已部署的独立 Cloudflare Worker，无数据库或图片存储；主页本身仍可由 GitHub Pages 托管。保留原仓库的 CNAME 和 MusicMini 子目录。
 
 ## 本地运行
 
